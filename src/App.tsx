@@ -1,10 +1,9 @@
-import React from "react";
-import ComponentContainer from "./Components/ComponentContainer";
+import Container from "./Components/Container";
 
 function App() {
   return (
-    <div className="flex justify-center">
-      <ComponentContainer />
+    <div className="flex justify-center p-10">
+      <Container />
     </div>
   );
 }
