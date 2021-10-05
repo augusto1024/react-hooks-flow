@@ -1,24 +1,43 @@
 import clsx from "clsx";
 import React from "react";
+import { useDrop } from "react-dnd";
 import TrashIcon from "../Icon/Trash";
-import Button from "./Button";
+import { ComponentNode } from "../Types/ComponentTree";
+import { DragTypes } from "../Types/DragTypes";
 
-const RemoveComponent = (
-  props: React.HTMLProps<HTMLDivElement>
-): JSX.Element => {
-  const { className, ...otherProps } = props;
+interface RemoveComponentProps extends React.HTMLProps<HTMLDivElement> {
+  onRemove: (id: string) => void;
+}
+
+const RemoveComponent = (props: RemoveComponentProps): JSX.Element => {
+  const { className, onRemove, ...otherProps } = props;
+  const [{ isOverCurrent }, drop] = useDrop({
+    accept: DragTypes.COMPONENT,
+    drop: (item: ComponentNode, monitor) => {
+      onRemove(item.id);
+    },
+    collect: (monitor) => ({
+      isOverCurrent: monitor.isOver({ shallow: true }),
+    }),
+  });
 
   return (
     <div
-      className={clsx("center w-full p-5 flex justify-center", className)}
+      ref={drop}
+      className={clsx(
+        "center rounded-md w-full p-5 flex justify-center",
+        isOverCurrent && "transition duration-100 bg-red-300 shadow-inner",
+        className
+      )}
       {...otherProps}
     >
-      <Button
-        rounded
-        className="transition duration-100 ease-in-out hover:bg-gray-100 transform hover:scale-150"
-        icon={
-          <TrashIcon className="fill-current transition duration-100 ease-in-out text-gray-400 group-hover:text-red-400" />
-        }
+      <TrashIcon
+        className={clsx(
+          "fill-current",
+          !isOverCurrent && "text-gray-400",
+          isOverCurrent &&
+            "text-white transition duration-100 transform scale-200"
+        )}
       />
     </div>
   );
