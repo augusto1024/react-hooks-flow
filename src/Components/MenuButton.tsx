@@ -11,7 +11,7 @@ interface MenuButtonProps
 }
 
 const MenuButton = (props: MenuButtonProps): JSX.Element => {
-  const { actions, height, width, disabled, ...otherProps } = props;
+  const { actions, height, width, disabled, className, ...otherProps } = props;
   const ref = React.useRef() as React.MutableRefObject<HTMLDivElement>;
   const [showMenu, setShowMenu] = React.useState(false);
 
@@ -32,7 +32,7 @@ const MenuButton = (props: MenuButtonProps): JSX.Element => {
   }, [showMenu]);
 
   return (
-    <div className="relative inline-block">
+    <div className={clsx("relative inline-block", className)}>
       <Button
         className={clsx(
           "rounded-full",

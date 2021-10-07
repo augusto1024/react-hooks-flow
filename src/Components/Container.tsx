@@ -14,6 +14,7 @@ const Container = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
   const { className, ...otherProps } = props;
   const [tree, dispatch] = useComponentTree();
   const [running, setRunning] = React.useState(false);
+  const [componentContainerKey, setComponentContainerKey] = React.useState(1);
   const forceUpdate = useForceUpdate();
 
   const addComponent = (): void => {
@@ -44,10 +45,14 @@ const Container = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
 
   const toggleApp = (): void => {
     setRunning(!running);
+    setComponentContainerKey(componentContainerKey + (1 % 3));
   };
 
   return (
-    <div className={clsx("bg-white shadow-md rounded-md p-5", className)}>
+    <div
+      {...otherProps}
+      className={clsx("bg-white shadow-md rounded-md p-5", className)}
+    >
       <div className="grid">
         <DndProvider backend={HTML5Backend}>
           <div className="grid grid-cols-1 gap-3">
@@ -60,6 +65,7 @@ const Container = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
               <StartStop onClick={toggleApp} running={running} />
             </div>
             <ComponentContainer
+              key={componentContainerKey.toString()}
               canDrag={!running}
               onMove={dragComponent}
               onRemove={removeComponent}

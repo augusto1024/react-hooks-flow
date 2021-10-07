@@ -38,6 +38,12 @@ const ComponentContainer = (props: ComponentContainerProps): JSX.Element => {
     }),
   });
 
+  const logger = (message: string): void => {
+    if (!canDrag) {
+      console.log(message);
+    }
+  };
+
   return (
     <div
       className={clsx(
@@ -51,6 +57,7 @@ const ComponentContainer = (props: ComponentContainerProps): JSX.Element => {
       {node.hasChildren() ? (
         node.children.map((child: ComponentNode) => (
           <Component
+            logger={logger}
             canDrag={canDrag}
             level={1}
             key={child.model.id}

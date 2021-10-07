@@ -14,6 +14,7 @@ export interface ComponentProps extends React.HTMLProps<HTMLDivElement> {
   node: ComponentNode;
   level: number;
   canDrag: boolean;
+  logger: (message: string) => void;
   onDropEvent: (componentId: string, parentId: string) => void;
   onRemoveEvent: (componentId: string) => void;
 }
@@ -28,10 +29,13 @@ const Component = (props: ComponentProps): JSX.Element => {
     onRemoveEvent,
     children,
     canDrag,
+    logger,
     ...otherProps
   } = props;
 
-  console.log(NEW_COMPONENT_MESSAGE(id, level, COMPONENT_MESSAGE.RENDER_START));
+  const name = node.model.name;
+
+  logger(NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_START));
 
   const [{ isDragging }, drag] = useDrag({
     type: DragTypes.COMPONENT,
@@ -59,32 +63,36 @@ const Component = (props: ComponentProps): JSX.Element => {
   });
 
   React.useEffect(() => {
-    console.log(
+    logger(
       NEW_COMPONENT_MESSAGE(
-        id,
+        name,
         level,
         COMPONENT_MESSAGE.USE_EFFECT_NO_DEPENDENCY
       )
     );
 
     return () => {
-      console.log(
-        NEW_COMPONENT_MESSAGE(id, level, COMPONENT_MESSAGE.CLEANUP_EFFECTS)
+      logger(
+        NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.CLEANUP_EFFECTS)
       );
     };
-  }, [id, level]);
+  }, [name, level, logger]);
 
   const [useEffectDependency, setUseEffectDependency] = React.useState(() => {
-    console.log(
-      NEW_COMPONENT_MESSAGE(id, level, COMPONENT_MESSAGE.LAZY_USE_STATE)
+    logger(
+      NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.LAZY_USE_STATE)
     );
     return false;
   });
   React.useEffect(() => {
-    console.log(
-      NEW_COMPONENT_MESSAGE(id, level, COMPONENT_MESSAGE.USE_EFFECT_DEPENDENCY)
+    logger(
+      NEW_COMPONENT_MESSAGE(
+        name,
+        level,
+        COMPONENT_MESSAGE.USE_EFFECT_DEPENDENCY
+      )
     );
-  }, [useEffectDependency, id, level]);
+  }, [useEffectDependency, name, level, logger]);
   const triggerUseEffectDependency = (): void => {
     setUseEffectDependency(!useEffectDependency);
   };
@@ -92,14 +100,14 @@ const Component = (props: ComponentProps): JSX.Element => {
   const [state, setState] = React.useState(false);
   const triggerState = (): void => {
     setState(!state);
-    console.log(NEW_COMPONENT_MESSAGE(id, level, COMPONENT_MESSAGE.USE_STATE));
+    logger(NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.USE_STATE));
   };
 
   const triggerUnmount = (): void => {
     onRemoveEvent(id);
   };
 
-  console.log(NEW_COMPONENT_MESSAGE(id, level, COMPONENT_MESSAGE.RENDER_END));
+  logger(NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_END));
 
   const menuActions = [
     { name: "Trigger useState", action: triggerState },
@@ -122,9 +130,13 @@ const Component = (props: ComponentProps): JSX.Element => {
       )}
       {...otherProps}
     >
-      <div className="flex place-items-center justify-between mb-4">
-        <p>Component {id}</p>
+      <div className="inline-flex mb-4">
+        <div className="w-full text-center" style={{ marginLeft: "40px" }}>
+          <p className="text-lg">{node.model.name}</p>
+          <p className="text-xs">{id}</p>
+        </div>
         <MenuButton
+          className="self-center"
           disabled={canDrag}
           actions={menuActions}
           width="16px"
@@ -142,6 +154,7 @@ const Component = (props: ComponentProps): JSX.Element => {
         {node.hasChildren() ? (
           node.children.map((child: ComponentNode) => (
             <Component
+              logger={logger}
               canDrag={canDrag}
               level={level + 1}
               key={child.model.id}

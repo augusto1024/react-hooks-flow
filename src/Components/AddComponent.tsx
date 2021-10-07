@@ -13,7 +13,7 @@ const AddComponent = (props: AddComponentProps): JSX.Element => {
 
   return (
     <div
-      className={`center flex justify-center ${className || ""}`}
+      className={clsx("center flex justify-center", className)}
       {...otherProps}
     >
       <Button

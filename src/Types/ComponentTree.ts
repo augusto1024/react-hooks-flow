@@ -1,23 +1,26 @@
 import TreeModel from 'tree-model';
 import { v4 as uuidv4 } from 'uuid';
+import generate from 'project-name-generator';
 
-export type ComponentNode = TreeModel.Node<{id: string}>;
+export type ComponentNode = TreeModel.Node<{id: string, name: string}>;
 
-export const ROOT_INDEX = 'root';
 
 export class ComponentTree {
   private tree: TreeModel;
   public root: ComponentNode;
 
   constructor() {
+    const id = uuidv4();
+    const name = generate({words: 3}).dashed;
     this.tree = new TreeModel();
-    this.root = this.tree.parse({ id: ROOT_INDEX });
+    this.root = this.tree.parse({ id, name });
   }
 
   public addComponent(): ComponentNode {
     const id = uuidv4();
+    const name = generate({words: 3}).dashed;
 
-    const component = this.tree.parse({ id });
+    const component = this.tree.parse({ id, name });
     this.root.addChild(component);
     return component;
   }
