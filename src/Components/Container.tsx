@@ -45,6 +45,7 @@ const Container = (): JSX.Element => {
             <AddComponent onAdd={addComponent} className="col-span-1" />
             <ComponentContainer
               onMove={dragComponent}
+              onRemove={removeComponent}
               node={tree.root}
               className="col-span-1"
             />
