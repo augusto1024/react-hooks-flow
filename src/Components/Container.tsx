@@ -6,8 +6,11 @@ import { DndProvider } from "react-dnd";
 import { useComponentTree } from "../Hooks/use-component-tree";
 import { useForceUpdate } from "../Hooks/use-force-update";
 import { ComponentNode } from "../Types/ComponentTree";
+import React from "react";
+import clsx from "clsx";
 
-const Container = (): JSX.Element => {
+const Container = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
+  const { className, ...otherProps } = props;
   const [tree, dispatch] = useComponentTree();
   const forceUpdate = useForceUpdate();
 
@@ -38,7 +41,7 @@ const Container = (): JSX.Element => {
   };
 
   return (
-    <div className="bg-white shadow-md m-2 rounded-md w-full p-5">
+    <div className={clsx("bg-white shadow-md rounded-md p-5", className)}>
       <div className="grid">
         <DndProvider backend={HTML5Backend}>
           <div className="grid grid-cols-1 gap-3">
