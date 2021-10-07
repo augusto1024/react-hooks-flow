@@ -13,6 +13,7 @@ export interface ComponentProps extends React.HTMLProps<HTMLDivElement> {
   id: string;
   node: ComponentNode;
   level: number;
+  canDrag: boolean;
   onDropEvent: (componentId: string, parentId: string) => void;
   onRemoveEvent: (componentId: string) => void;
 }
@@ -26,6 +27,7 @@ const Component = (props: ComponentProps): JSX.Element => {
     onDropEvent,
     onRemoveEvent,
     children,
+    canDrag,
     ...otherProps
   } = props;
 
@@ -37,6 +39,7 @@ const Component = (props: ComponentProps): JSX.Element => {
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    canDrag,
   });
 
   const [{ isOverCurrent }, drop] = useDrop({
@@ -121,7 +124,12 @@ const Component = (props: ComponentProps): JSX.Element => {
     >
       <div className="flex place-items-center justify-between mb-4">
         <p>Component {id}</p>
-        <MenuButton actions={menuActions} />
+        <MenuButton
+          disabled={canDrag}
+          actions={menuActions}
+          width="16px"
+          height="16px"
+        />
       </div>
 
       <div
@@ -134,6 +142,7 @@ const Component = (props: ComponentProps): JSX.Element => {
         {node.hasChildren() ? (
           node.children.map((child: ComponentNode) => (
             <Component
+              canDrag={canDrag}
               level={level + 1}
               key={child.model.id}
               id={child.model.id}

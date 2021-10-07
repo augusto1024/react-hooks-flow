@@ -7,12 +7,21 @@ import Component from "./Component";
 
 interface ComponentContainerProps extends React.HTMLProps<HTMLDivElement> {
   node: ComponentNode;
+  canDrag: boolean;
   onMove: (componentId: string, parentId: string) => void;
   onRemove: (componentId: string) => void;
 }
 
 const ComponentContainer = (props: ComponentContainerProps): JSX.Element => {
-  const { className, children, node, onMove, onRemove, ...otherProps } = props;
+  const {
+    className,
+    canDrag,
+    children,
+    node,
+    onMove,
+    onRemove,
+    ...otherProps
+  } = props;
   const [{ isOverCurrent }, drop] = useDrop({
     accept: DragTypes.COMPONENT,
     drop: (item: ComponentNode, monitor) => {
@@ -42,6 +51,7 @@ const ComponentContainer = (props: ComponentContainerProps): JSX.Element => {
       {node.hasChildren() ? (
         node.children.map((child: ComponentNode) => (
           <Component
+            canDrag={canDrag}
             level={1}
             key={child.model.id}
             id={child.model.id}

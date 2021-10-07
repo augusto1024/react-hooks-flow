@@ -5,11 +5,13 @@ import Button from "./Button";
 
 interface MenuButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  width?: string;
+  height?: string;
   actions: { name: string; action: () => void }[];
 }
 
 const MenuButton = (props: MenuButtonProps): JSX.Element => {
-  const { actions } = props;
+  const { actions, height, width, disabled, ...otherProps } = props;
   const ref = React.useRef() as React.MutableRefObject<HTMLDivElement>;
   const [showMenu, setShowMenu] = React.useState(false);
 
@@ -32,9 +34,20 @@ const MenuButton = (props: MenuButtonProps): JSX.Element => {
   return (
     <div className="relative inline-block">
       <Button
-        className="rounded-full transition duration-100 ease-in-out hover:bg-gray-50"
-        {...props}
-        icon={<MoreIcon className="fill-current text-gray-400" />}
+        className={clsx(
+          "rounded-full",
+          disabled && "cursor-not-allowed",
+          !disabled && "transition duration-100 ease-in-out hover:bg-gray-50"
+        )}
+        disabled={disabled}
+        {...otherProps}
+        icon={
+          <MoreIcon
+            height={height}
+            width={width}
+            className="fill-current text-gray-400"
+          />
+        }
         onClick={toggleMenu}
       />{" "}
       <div
@@ -46,7 +59,11 @@ const MenuButton = (props: MenuButtonProps): JSX.Element => {
         )}
       >
         {actions.map((action) => (
-          <button key={action.name} className="p-2" onClick={action.action}>
+          <button
+            key={action.name}
+            className="p-2 hover:bg-gray-100"
+            onClick={action.action}
+          >
             {action.name}
           </button>
         ))}
