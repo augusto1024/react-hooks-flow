@@ -38,9 +38,9 @@ const ComponentContainer = (props: ComponentContainerProps): JSX.Element => {
     }),
   });
 
-  const logger = (message: string): void => {
+  const logger = (message: string, color: string): void => {
     if (!canDrag) {
-      console.log(message);
+      console.log(`%c${message}`, `color: ${color}`);
     }
   };
 

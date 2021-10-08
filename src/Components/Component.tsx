@@ -14,7 +14,7 @@ export interface ComponentProps extends React.HTMLProps<HTMLDivElement> {
   node: ComponentNode;
   level: number;
   canDrag: boolean;
-  logger: (message: string) => void;
+  logger: (message: string, color: string) => void;
   onDropEvent: (componentId: string, parentId: string) => void;
   onRemoveEvent: (componentId: string) => void;
 }
@@ -34,8 +34,12 @@ const Component = (props: ComponentProps): JSX.Element => {
   } = props;
 
   const name = node.model.name;
+  const color = node.model.color;
 
-  logger(NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_START));
+  logger(
+    NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_START),
+    color
+  );
 
   const [{ isDragging }, drag] = useDrag({
     type: DragTypes.COMPONENT,
@@ -68,19 +72,22 @@ const Component = (props: ComponentProps): JSX.Element => {
         name,
         level,
         COMPONENT_MESSAGE.USE_EFFECT_NO_DEPENDENCY
-      )
+      ),
+      color
     );
 
     return () => {
       logger(
-        NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.CLEANUP_EFFECTS)
+        NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.CLEANUP_EFFECTS),
+        color
       );
     };
-  }, [name, level, logger]);
+  }, [name, level, logger, color]);
 
   const [useEffectDependency, setUseEffectDependency] = React.useState(() => {
     logger(
-      NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.LAZY_USE_STATE)
+      NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.LAZY_USE_STATE),
+      color
     );
     return false;
   });
@@ -90,9 +97,10 @@ const Component = (props: ComponentProps): JSX.Element => {
         name,
         level,
         COMPONENT_MESSAGE.USE_EFFECT_DEPENDENCY
-      )
+      ),
+      color
     );
-  }, [useEffectDependency, name, level, logger]);
+  }, [useEffectDependency, name, level, logger, color]);
   const triggerUseEffectDependency = (): void => {
     setUseEffectDependency(!useEffectDependency);
   };
@@ -100,14 +108,20 @@ const Component = (props: ComponentProps): JSX.Element => {
   const [state, setState] = React.useState(false);
   const triggerState = (): void => {
     setState(!state);
-    logger(NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.USE_STATE));
+    logger(
+      NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.USE_STATE),
+      color
+    );
   };
 
   const triggerUnmount = (): void => {
     onRemoveEvent(id);
   };
 
-  logger(NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_END));
+  logger(
+    NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_END),
+    color
+  );
 
   const menuActions = [
     { name: "Trigger useState", action: triggerState },
@@ -132,8 +146,15 @@ const Component = (props: ComponentProps): JSX.Element => {
     >
       <div className="inline-flex mb-4">
         <div className="w-full text-center" style={{ marginLeft: "40px" }}>
-          <p className="text-lg">{node.model.name}</p>
-          <p className="text-xs">{id}</p>
+          <div className="flex justify-center mb-1">
+            <p
+              style={{ backgroundColor: color }}
+              className="text-lg rounded-md shadow-sm text-white px-2"
+            >
+              {node.model.name}
+            </p>
+          </div>
+          <p className="text-xs text-gray-500">{id}</p>
         </div>
         <MenuButton
           className="self-center"

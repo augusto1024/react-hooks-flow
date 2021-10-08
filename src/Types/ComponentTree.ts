@@ -1,27 +1,34 @@
 import TreeModel from 'tree-model';
 import { v4 as uuidv4 } from 'uuid';
 import generate from 'project-name-generator';
+import { Colors } from '../Utils/ColorGenerator';
 
-export type ComponentNode = TreeModel.Node<{id: string, name: string}>;
-
+export type ComponentNode = TreeModel.Node<{id: string, name: string, color: string}>;
 
 export class ComponentTree {
   private tree: TreeModel;
   public root: ComponentNode;
+  private color: Colors;
 
   constructor() {
+    this.color = new Colors();
+
     const id = uuidv4();
     const name = generate({words: 3}).dashed;
+    const color = this.color.generate(0);
+
     this.tree = new TreeModel();
-    this.root = this.tree.parse({ id, name });
+    this.root = this.tree.parse({ id, name, color });
   }
 
   public addComponent(): ComponentNode {
     const id = uuidv4();
     const name = generate({words: 3}).dashed;
+    const color = this.color.generate(this.length);
 
-    const component = this.tree.parse({ id, name });
+    const component = this.tree.parse({ id, name, color });
     this.root.addChild(component);
+
     return component;
   }
 
