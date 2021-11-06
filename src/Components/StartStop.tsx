@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import PauseIcon from "../Icon/Pause";
+import StopIcon from "../Icon/Stop";
 import PlayIcon from "../Icon/Play";
 import Button from "./Button";
 
@@ -38,7 +38,7 @@ const StartStop = ({
               )}
             />
           ) : (
-            <PauseIcon
+            <StopIcon
               className={clsx(
                 "fill-current transition duration-100 ease-in-out"
               )}
