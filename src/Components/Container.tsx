@@ -62,13 +62,16 @@ const Container = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
                 onAdd={addComponent}
                 className="mr-5"
               />
-              <StartStop onClick={toggleApp} running={running} />
+              <StartStop
+                onClick={toggleApp}
+                running={running}
+                disabled={tree.length === 1}
+              />
             </div>
             <ComponentContainer
               key={componentContainerKey.toString()}
               canDrag={!running}
               onMove={dragComponent}
-              onRemove={removeComponent}
               node={tree.root}
               className="col-span-1"
             />

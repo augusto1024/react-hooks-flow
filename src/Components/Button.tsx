@@ -6,16 +6,18 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   rounded?: boolean;
 }
 
-const Button = (props: ButtonProps = { rounded: false }): JSX.Element => {
-  const { children, className, icon, rounded, ...otherProps } = props;
-
+const Button = (
+  { children, className, icon, rounded, ...props }: ButtonProps = {
+    rounded: false,
+  }
+): JSX.Element => {
   return (
     <button
       className={clsx(className, "p-3 group", {
         "rounded-full": rounded,
         "rounded-md": !rounded,
       })}
-      {...otherProps}
+      {...props}
     >
       <div className="flex flex-row space-x-3">
         {icon || null}

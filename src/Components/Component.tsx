@@ -16,7 +16,6 @@ export interface ComponentProps extends React.HTMLProps<HTMLDivElement> {
   canDrag: boolean;
   logger: (message: string, color: string) => void;
   onDropEvent: (componentId: string, parentId: string) => void;
-  onRemoveEvent: (componentId: string) => void;
 }
 
 const Component = (props: ComponentProps): JSX.Element => {
@@ -26,7 +25,6 @@ const Component = (props: ComponentProps): JSX.Element => {
     level,
     node,
     onDropEvent,
-    onRemoveEvent,
     children,
     canDrag,
     logger,
@@ -36,7 +34,16 @@ const Component = (props: ComponentProps): JSX.Element => {
   const name = node.model.name;
   const color = node.model.color;
 
-  logger(
+  const [display, setDisplay] = React.useState(true);
+
+  const conditionalLogger = React.useCallback(
+    (message: string, color: string): void => {
+      display && logger(message, color);
+    },
+    [display, logger]
+  );
+
+  conditionalLogger(
     NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_START),
     color
   );
@@ -67,7 +74,7 @@ const Component = (props: ComponentProps): JSX.Element => {
   });
 
   React.useEffect(() => {
-    logger(
+    conditionalLogger(
       NEW_COMPONENT_MESSAGE(
         name,
         level,
@@ -77,22 +84,22 @@ const Component = (props: ComponentProps): JSX.Element => {
     );
 
     return () => {
-      logger(
+      conditionalLogger(
         NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.CLEANUP_EFFECTS),
         color
       );
     };
-  }, [name, level, logger, color]);
+  }, [name, level, conditionalLogger, color]);
 
   const [useEffectDependency, setUseEffectDependency] = React.useState(() => {
-    logger(
+    conditionalLogger(
       NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.LAZY_USE_STATE),
       color
     );
     return false;
   });
   React.useEffect(() => {
-    logger(
+    conditionalLogger(
       NEW_COMPONENT_MESSAGE(
         name,
         level,
@@ -100,7 +107,7 @@ const Component = (props: ComponentProps): JSX.Element => {
       ),
       color
     );
-  }, [useEffectDependency, name, level, logger, color]);
+  }, [useEffectDependency, name, level, conditionalLogger, color]);
   const triggerUseEffectDependency = (): void => {
     setUseEffectDependency(!useEffectDependency);
   };
@@ -108,17 +115,17 @@ const Component = (props: ComponentProps): JSX.Element => {
   const [state, setState] = React.useState(false);
   const triggerState = (): void => {
     setState(!state);
-    logger(
+    conditionalLogger(
       NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.USE_STATE),
       color
     );
   };
 
   const triggerUnmount = (): void => {
-    onRemoveEvent(id);
+    setDisplay(!display);
   };
 
-  logger(
+  conditionalLogger(
     NEW_COMPONENT_MESSAGE(name, level, COMPONENT_MESSAGE.RENDER_END),
     color
   );
@@ -136,7 +143,11 @@ const Component = (props: ComponentProps): JSX.Element => {
     <div
       id={id}
       ref={drag}
-      style={{ minWidth: "300px", margin: "10px" }}
+      style={{
+        minWidth: "300px",
+        margin: "10px",
+        display: display ? "block" : "none",
+      }}
       className={clsx(
         "bg-white shadow-sm rounded-md p-4 flex-auto flex flex-col",
         className,
@@ -144,7 +155,7 @@ const Component = (props: ComponentProps): JSX.Element => {
       )}
       {...otherProps}
     >
-      <div className="inline-flex mb-4">
+      <div className="inline-flex mb-4 w-full">
         <div className="w-full text-center" style={{ marginLeft: "40px" }}>
           <div className="flex justify-center mb-1">
             <p
@@ -182,7 +193,6 @@ const Component = (props: ComponentProps): JSX.Element => {
               id={child.model.id}
               node={child}
               onDropEvent={onDropEvent}
-              onRemoveEvent={onRemoveEvent}
             />
           ))
         ) : (

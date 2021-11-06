@@ -7,26 +7,36 @@ import Button from "./Button";
 interface StartStopProps extends React.HTMLProps<HTMLDivElement> {
   running: boolean;
   onClick: () => void;
+  disabled?: boolean;
 }
 
-const StartStop = (props: StartStopProps): JSX.Element => {
-  const { className, running, onClick, ...otherProps } = props;
-
+const StartStop = ({
+  disabled = false,
+  className,
+  running,
+  onClick,
+  ...props
+}: StartStopProps): JSX.Element => {
   return (
-    <div
-      className={`center flex justify-center ${className || ""}`}
-      {...otherProps}
-    >
+    <div className={`center flex justify-center ${className || ""}`} {...props}>
       <Button
         onClick={onClick}
+        disabled={disabled}
         className={clsx(
-          "transition duration-100 ease-in-out hover:text-white",
-          !running && "hover:bg-green-400",
-          running && "bg-red-400 hover:bg-red-500 text-white"
+          !disabled && "transition duration-100 ease-in-out hover:text-white",
+          !running && !disabled && "hover:bg-green-400",
+          running && "bg-red-400 hover:bg-red-500 text-white",
+          disabled && "bg-gray-100 cursor-not-allowed text-gray-400"
         )}
         icon={
           !running ? (
-            <PlayIcon className="fill-current transition duration-100 text-green-400 ease-in-out group-hover:text-white" />
+            <PlayIcon
+              className={clsx(
+                "fill-current text-green-400",
+                !disabled &&
+                  "transition duration-100 ease-in-out group-hover:text-white"
+              )}
+            />
           ) : (
             <PauseIcon
               className={clsx(
