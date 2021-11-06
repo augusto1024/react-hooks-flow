@@ -1,4 +1,5 @@
 import Container from "./Components/Container";
+import Footer from "./Components/Footer";
 import Intro from "./Components/Intro";
 import SmallScreen from "./Components/SmallScreen";
 import { ComponentTreeProvider } from "./Providers/ComponentTreeProvider";
@@ -11,6 +12,7 @@ function App() {
           <Intro className="xs:hidden" />
           <Container className="xs:hidden" />
           <SmallScreen className="xs:block hidden" />
+          <Footer />
         </div>
       </ComponentTreeProvider>
     </div>
