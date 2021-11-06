@@ -56,7 +56,7 @@ const Container = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
       <div className="grid">
         <DndProvider backend={HTML5Backend}>
           <div className="grid grid-cols-1 gap-3">
-            <div className="flex">
+            <div className="flex sm:flex-col gap-3">
               <AddComponent
                 canAdd={!running}
                 onAdd={addComponent}

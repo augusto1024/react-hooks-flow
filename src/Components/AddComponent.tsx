@@ -20,6 +20,7 @@ const AddComponent = (props: AddComponentProps): JSX.Element => {
         disabled={!canAdd}
         onClick={onAdd}
         className={clsx(
+          "sm:w-full",
           canAdd &&
             "transition duration-100 ease-in-out hover:bg-blue-400 hover:text-white",
           !canAdd && "bg-gray-100 cursor-not-allowed text-gray-400"

@@ -23,6 +23,7 @@ const StartStop = ({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
+          "sm:w-full",
           !disabled && "transition duration-100 ease-in-out hover:text-white",
           !running && !disabled && "hover:bg-green-400",
           running && "bg-red-400 hover:bg-red-500 text-white",

@@ -19,7 +19,7 @@ const Button = (
       })}
       {...props}
     >
-      <div className="flex flex-row space-x-3">
+      <div className="flex flex-row justify-center space-x-3">
         {icon || null}
         {children && <div>{children}</div>}
       </div>
