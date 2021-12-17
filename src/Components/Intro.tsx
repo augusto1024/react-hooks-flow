@@ -29,9 +29,9 @@ export const Intro = (props: React.HTMLProps<HTMLDivElement>): JSX.Element => {
       <h2>React Hooks Flow</h2>
       <p>
         The goal of this app is to help people understand how{" "}
-        <a href="http://www.google.com">React Hooks</a> work. You can add and
-        nest multiple components and use your browser's developer console to see
-        when and how triggers are, well..., triggered.
+        <a href="https://reactjs.org/docs/hooks-intro.html">React Hooks</a>{" "}
+        work. You can add and nest multiple components and use your browser's
+        developer console to see when and how triggers are, well..., triggered.
       </p>
       <p>
         👉 This application was based on{" "}
