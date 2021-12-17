@@ -5,7 +5,7 @@ The goal of this app is to help people understand how [React Hooks work](https:/
 
 If you don't feel like running this project locally, it's also hosted on Vercel (❤️) and you can check it [here](https://react-hooks-flow.vercel.app/).
 
-### Instructions
+## Instructions
 For starting the project, you just need to run your tipical commands for a React project.
 ```bash
 yarn install
@@ -13,6 +13,9 @@ yarn start
 ```
 
 Once you have it running, go to [localhost:3000](localhost:3000) and you'll see the instructions to use the app.
+
+## License
+[MIT](https://github.com/augusto1024/react-hooks-flow/blob/main/LICENSE) Licensed
 
 ---
 
